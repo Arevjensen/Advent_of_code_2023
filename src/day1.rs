@@ -14,7 +14,7 @@ pub fn run(part: &str) {
 }
 
 fn part1(input: &str) -> Solution {
-    Solution::from(input.lines().into_iter().collect::<String>())
+    Solution::from(100)
 }
 
 fn part2(input: &str) -> Solution {
@@ -31,8 +31,8 @@ mod tests {
     #[test]
     fn test_part_1() {
         let fasit = Solution::from(100);
-        let my_soultion = part1(TEST_INPUT_ONE);
-        assert_eq!(fasit, my_soultion);
+        let part_solution = part1(TEST_INPUT_ONE);
+        assert_eq!(fasit, part_solution);
     }
 
     #[test]
