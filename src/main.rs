@@ -6,7 +6,7 @@ struct Args {
     /// Day to run
     #[arg(short, long, default_value_t = 1)]
     day: u8,
-    /// Day to run
+    /// Part of day to run
     #[arg(short, long, default_value_t = String::from("1"))]
     part: String,
 }
