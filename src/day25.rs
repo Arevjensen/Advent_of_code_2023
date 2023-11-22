@@ -13,11 +13,11 @@ pub fn run(part: &str) {
     println!("{:?}", result)
 }
 
-fn part1(input: &str) -> Solution {
+pub fn part1(input: &str) -> Solution {
     Solution::from(100)
 }
 
-fn part2(input: &str) -> Solution {
+pub fn part2(input: &str) -> Solution {
     unimplemented!()
 }
 
