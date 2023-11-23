@@ -21,3 +21,13 @@ pub fn read_text_from_file(part: &str, day: &str) -> String {
 
     fs::read_to_string(path).unwrap()
 }
+
+pub fn get_input_path_bigboy(part: &str, day: &str) -> String {
+    format!("input/day_{day}_{part}_big.txt")
+}
+
+pub fn read_text_from_file_bigboy(part: &str, day: &str) -> String {
+    let path = get_input_path_bigboy(part, day);
+
+    fs::read_to_string(path).unwrap()
+}
