@@ -1,5 +1,5 @@
 use crate::helpers::loader;
-use crate::helpers::Solution;
+use crate::helpers::solution::Solution;
 
 const DAY: &str = "8";
 
