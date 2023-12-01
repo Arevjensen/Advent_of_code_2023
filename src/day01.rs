@@ -60,7 +60,6 @@ pub fn part2(input: &str) -> Solution {
                 {
                     build_string += number_char;
                     while pattern_builer.contains(&value) {
-                        dbg!(&pattern_builer);
                         pattern_builer = pattern_builer[1..].to_string();
                     }
                 }
@@ -72,17 +71,13 @@ pub fn part2(input: &str) -> Solution {
 
     let mut sum_vec = Vec::new();
     for number_string in vec_strings.iter() {
-        if number_string.len() == 1 {
-            let summable_value = number_string.parse::<u32>().unwrap();
-            sum_vec.push(summable_value);
-        } else {
-            let first = number_string.get(0..1);
-            let last = number_string.get(number_string.len() - 1..number_string.len());
-            let new_number_string = first.unwrap().to_string() + last.unwrap();
+        let first = number_string.get(0..1);
+        let last = number_string.get(number_string.len() - 1..number_string.len());
+        let new_number_string = first.unwrap().to_string() + last.unwrap();
 
-            let summable_value = new_number_string.parse::<u32>().unwrap();
-            sum_vec.push(summable_value);
-        }
+        let summable_value = new_number_string.parse::<u32>().unwrap();
+
+        sum_vec.push(summable_value);
     }
 
     Solution::from(sum_vec.iter().sum::<u32>())
