@@ -26,6 +26,7 @@ pub mod day23;
 pub mod day24;
 pub mod day25;
 pub mod helpers;
+use nom;
 
 pub fn run(day: u8, part: &str) {
     match day {
