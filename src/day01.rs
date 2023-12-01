@@ -55,9 +55,14 @@ pub fn part2(input: &str) -> Solution {
                 pattern_builer = "".to_string();
             } else {
                 pattern_builer += char.to_string().as_str();
-                if let Some(number_char) = valid_checker(&pattern_builer, &valid_values_vec) {
+                if let Some((number_char, value)) =
+                    valid_checker(&pattern_builer, &valid_values_vec)
+                {
                     build_string += number_char;
-                    pattern_builer = "".to_string();
+                    while pattern_builer.contains(&value) {
+                        dbg!(&pattern_builer);
+                        pattern_builer = pattern_builer[1..].to_string();
+                    }
                 }
             }
         }
@@ -79,15 +84,17 @@ pub fn part2(input: &str) -> Solution {
             sum_vec.push(summable_value);
         }
     }
-    dbg!(&sum_vec);
 
     Solution::from(sum_vec.iter().sum::<u32>())
 }
 
-fn valid_checker(check: &str, values: &Vec<&str>) -> Option<&'static str> {
+fn valid_checker(check: &str, values: &Vec<&str>) -> Option<(&'static str, String)> {
     for valid_value in values {
         if check.contains(valid_value) {
-            return number_string_matcher(valid_value);
+            return Some((
+                number_string_matcher(valid_value).unwrap(),
+                valid_value.to_string(),
+            ));
         }
     }
     return None;
