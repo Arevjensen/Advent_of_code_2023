@@ -33,13 +33,14 @@ pub fn part1(input: &str) -> Solution {
             let (mut blue, mut red, mut green) = (0, 0, 0);
             for balls in draws {
                 balls.split(",").for_each(|colour| {
-                    let (amount, colour) = colour.trim().split_once(" ").unwrap();
-                    match colour {
-                        "red" => red = cmp::max(red, amount.parse().unwrap()),
-                        "green" => green = cmp::max(green, amount.parse().unwrap()),
-                        "blue" => blue = cmp::max(blue, amount.parse().unwrap()),
-                        _ => unreachable!("{}", colour),
-                    };
+                    if let Some((amount, colour)) = colour.trim().split_once(" ") {
+                        match colour {
+                            "red" => red = cmp::max(red, amount.parse().unwrap()),
+                            "green" => green = cmp::max(green, amount.parse().unwrap()),
+                            "blue" => blue = cmp::max(blue, amount.parse().unwrap()),
+                            _ => unreachable!("{}", colour),
+                        };
+                    }
                 });
             }
             let index = idx + 1;
