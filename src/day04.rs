@@ -1,9 +1,6 @@
-use std::collections::HashMap;
-
-use rayon::result;
-
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
+use std::collections::HashMap;
 
 const DAY: &str = "4";
 
