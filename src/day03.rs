@@ -1,9 +1,5 @@
-use std::collections::{HashMap, HashSet};
-
-use nom::FindToken;
-
+use crate::helpers::loader;
 use crate::helpers::solution::Solution;
-use crate::helpers::{loader, solution};
 
 const DAY: &str = "3";
 
