@@ -151,7 +151,6 @@ pub fn part2(input: &str) -> Solution {
         .enumerate()
         .map(|(y, c)| {
             number_and_coords_vec.clear();
-            //chars i line
             c.iter().enumerate().for_each(|(x, c)| {
                 if x == 0 && number_string.len() != 0 {
                     number_and_coords_vec
