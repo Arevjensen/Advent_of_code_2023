@@ -1,7 +1,9 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::helpers::loader;
+use nom::FindToken;
+
 use crate::helpers::solution::Solution;
+use crate::helpers::{loader, solution};
 
 const DAY: &str = "3";
 
@@ -173,13 +175,40 @@ pub fn part2(input: &str) -> Solution {
         })
         .flatten()
         .collect();
+    let mut result = 0;
+    for (y_gear, x_gear) in gear_coordinates {
+        let near_coords = vec![
+            (y_gear - 1, x_gear - 1),
+            (y_gear - 1, x_gear),
+            (y_gear - 1, x_gear + 1),
+            (y_gear, x_gear - 1),
+            (y_gear, x_gear + 1),
+            (y_gear + 1, x_gear - 1),
+            (y_gear + 1, x_gear),
+            (y_gear + 1, x_gear + 1),
+        ];
+        let valid_nearby_numbers = number_coordinates
+            .iter()
+            .filter(|(number_coords, _)| {
+                let mut some = false;
+                for number in number_coords {
+                    if near_coords.contains(number) {
+                        some = true;
+                    }
+                }
+                some
+            })
+            .map(|x| x.1)
+            .collect::<Vec<u32>>();
 
-    dbg!(&number_coordinates);
-    // .flatten()
-    // .collect();
-    // dbg!(number_and_coords_vec);
+        if valid_nearby_numbers.len() == 2 {
+            let first = valid_nearby_numbers.first().unwrap();
+            let last = valid_nearby_numbers.last().unwrap();
+            result += first * last;
+        }
+    }
 
-    todo!()
+    Solution::from(result)
 }
 
 #[cfg(test)]
