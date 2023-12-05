@@ -1,6 +1,4 @@
-use std::u128;
-
-use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
+use rayon::iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
@@ -31,8 +29,7 @@ pub fn part1(input: &str) -> Solution {
         .split("seeds: ")
         .skip(1)
         .map(|x| {
-            String::from(x)
-                .split_whitespace()
+            x.split_whitespace()
                 .filter_map(|x| x.parse().ok())
                 .collect::<Vec<usize>>()
         })
@@ -60,7 +57,7 @@ pub fn part1(input: &str) -> Solution {
         .collect::<Vec<Vec<SourceToDestinationMap>>>();
 
     let seed_final_mappings = start_seeds
-        .iter()
+        .par_iter()
         .map(|x| {
             let mut next_mapping = *x;
             for map in &source_to_destination_maps {
@@ -81,24 +78,75 @@ fn find_new_number_from_mapping(number: usize, mapping: &Vec<SourceToDestination
         {
             continue;
         }
-        let check_number_in_range = (map_variation.source_range_start
-            ..map_variation.source_range_start + map_variation.range_length)
-            .collect::<Vec<usize>>()
-            .iter()
-            .position(|x| x == &number);
-        if let Some(position) = check_number_in_range {
-            return_number = *(map_variation.destination_range_start
-                ..map_variation.destination_range_start + map_variation.range_length)
-                .collect::<Vec<usize>>()
-                .get(position)
-                .unwrap()
-        }
+        let index = number - map_variation.source_range_start;
+        return_number = map_variation.destination_range_start + index;
     }
     return_number
 }
 
 pub fn part2(input: &str) -> Solution {
-    unimplemented!()
+    let split_into_sections = input.split("\n\n").collect::<Vec<&str>>();
+
+    let start_seeds: Vec<usize> = split_into_sections[0]
+        .split("seeds: ")
+        .skip(1)
+        .map(|x| {
+            String::from(x)
+                .split_whitespace()
+                .filter_map(|x| x.parse().ok())
+                .collect::<Vec<usize>>()
+
+            // let test: Vec<usize> = x
+            //     .chunks(2)
+            //     .map(|x| (x[0]..x[0] + x[1]).collect::<Vec<usize>>())
+            //     .flatten()
+            //     .collect();
+
+            // test
+        })
+        .flatten()
+        .collect();
+
+    // dbg!(&start_seeds);
+
+    let source_to_destination_maps = split_into_sections[1..]
+        .iter()
+        .map(|x| {
+            x.split('\n')
+                .skip(1)
+                .map(|x| {
+                    let split_white = x
+                        .split_whitespace()
+                        .filter_map(|x| x.parse().ok())
+                        .collect::<Vec<usize>>();
+                    SourceToDestinationMap {
+                        destination_range_start: split_white[0],
+                        source_range_start: split_white[1],
+                        range_length: split_white[2],
+                    }
+                })
+                .collect::<Vec<SourceToDestinationMap>>()
+        })
+        .collect::<Vec<Vec<SourceToDestinationMap>>>();
+
+    let seed_final_mappings = start_seeds
+        .chunks(2)
+        .map(|x| {
+            (x[0]..x[0] + x[1])
+                .into_par_iter()
+                .map(|x| {
+                    let mut next_mapping = x;
+                    for map in &source_to_destination_maps {
+                        next_mapping = find_new_number_from_mapping(next_mapping, &map);
+                    }
+                    next_mapping
+                })
+                .collect::<Vec<usize>>()
+        })
+        .flatten()
+        .collect::<Vec<usize>>();
+
+    Solution::from(*seed_final_mappings.iter().min().unwrap() as usize)
 }
 
 #[cfg(test)]
@@ -138,7 +186,7 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4";
-    const TEST_INPUT_TWO: &str = r"";
+    const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
 
     #[test]
     fn test_part_1() {
@@ -149,7 +197,7 @@ humidity-to-location map:
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(200);
+        let fasit = Solution::from(46);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }
