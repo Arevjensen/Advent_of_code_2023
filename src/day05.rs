@@ -99,8 +99,6 @@ pub fn part2(input: &str) -> Solution {
         .flatten()
         .collect();
 
-    // dbg!(&start_seeds);
-
     let source_to_destination_maps = split_into_sections[1..]
         .iter()
         .map(|x| {
@@ -133,9 +131,9 @@ pub fn part2(input: &str) -> Solution {
                     }
                     next_mapping
                 })
-                .collect::<Vec<usize>>()
+                .min()
+                .unwrap()
         })
-        .flatten()
         .collect::<Vec<usize>>();
 
     Solution::from(*seed_final_mappings.iter().min().unwrap() as usize)
@@ -189,7 +187,7 @@ humidity-to-location map:
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(46);
+        let fasit = Solution::from(47 as usize);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }
