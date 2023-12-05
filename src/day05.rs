@@ -95,14 +95,6 @@ pub fn part2(input: &str) -> Solution {
                 .split_whitespace()
                 .filter_map(|x| x.parse().ok())
                 .collect::<Vec<usize>>()
-
-            // let test: Vec<usize> = x
-            //     .chunks(2)
-            //     .map(|x| (x[0]..x[0] + x[1]).collect::<Vec<usize>>())
-            //     .flatten()
-            //     .collect();
-
-            // test
         })
         .flatten()
         .collect();
