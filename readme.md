@@ -1,6 +1,8 @@
 Solutions for advent of code 2023 
 https://adventofcode.com/
 
+put puzzle input into /input/day_{day}_{part}.txt
+
 Run release version day, part with:
 cargo run -r -- -d {day} -p {part}
 
