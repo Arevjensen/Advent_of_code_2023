@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use std::io::{stdin, stdout, Read, Write};
-use std::thread::LocalKey;
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
@@ -115,6 +113,7 @@ pub fn lcm(nums: &[usize]) -> usize {
     let b = lcm(&nums[1..]);
     a * b / gcd_of_two_numbers(a, b)
 }
+
 fn gcd_of_two_numbers(a: usize, b: usize) -> usize {
     if b == 0 {
         return a;
@@ -122,12 +121,6 @@ fn gcd_of_two_numbers(a: usize, b: usize) -> usize {
     gcd_of_two_numbers(b, a % b)
 }
 
-fn pause() {
-    let mut stdout = stdout();
-    stdout.write(b"Press Enter to continue...").unwrap();
-    stdout.flush().unwrap();
-    stdin().read(&mut [0]).unwrap();
-}
 #[cfg(test)]
 mod tests {
     use super::*;
