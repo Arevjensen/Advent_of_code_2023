@@ -83,16 +83,12 @@ pub fn part2(input: &str) -> Solution {
         })
         .collect::<HashMap<String, LocationRoutes>>();
 
-    // let mut current_location = vec_start_locations;
-    // let mut steps = 0;
-
     let mut number_of_steps_for_each_start = HashMap::new();
 
     for start_location in vec_start_locations {
         let mut current_location = start_location.clone();
         for (idx, x) in instructions.chars().cycle().enumerate() {
             if current_location.chars().last().unwrap() == 'Z' {
-                // dbg!(&current_location);
                 number_of_steps_for_each_start.insert(start_location.clone(), idx);
                 break;
             }
@@ -104,7 +100,6 @@ pub fn part2(input: &str) -> Solution {
             };
         }
     }
-    dbg!("started multiplying");
 
     let steps_as_vec = Vec::from_iter(number_of_steps_for_each_start.values().map(|x| *x));
     let result = lcm(steps_as_vec.as_slice());
