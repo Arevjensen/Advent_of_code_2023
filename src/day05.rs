@@ -28,12 +28,11 @@ pub fn part1(input: &str) -> Solution {
     let start_seeds: Vec<usize> = split_into_sections[0]
         .split("seeds: ")
         .skip(1)
-        .map(|x| {
+        .flat_map(|x| {
             x.split_whitespace()
                 .filter_map(|x| x.parse().ok())
                 .collect::<Vec<usize>>()
         })
-        .flatten()
         .collect();
 
     let source_to_destination_maps = split_into_sections[1..]
@@ -90,13 +89,12 @@ pub fn part2(input: &str) -> Solution {
     let start_seeds: Vec<usize> = split_into_sections[0]
         .split("seeds: ")
         .skip(1)
-        .map(|x| {
+        .flat_map(|x| {
             String::from(x)
                 .split_whitespace()
                 .filter_map(|x| x.parse().ok())
                 .collect::<Vec<usize>>()
         })
-        .flatten()
         .collect();
 
     let source_to_destination_maps = split_into_sections[1..]

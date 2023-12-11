@@ -129,13 +129,12 @@ pub fn part2(input: &str) -> Solution {
     let gear_coordinates = schematic_grid
         .iter()
         .enumerate()
-        .map(|(y, x)| {
+        .flat_map(|(y, x)| {
             x.iter()
                 .enumerate()
                 .filter(|(x, c)| **c == '*')
                 .map(move |(x, c)| (y as isize, x as isize))
         })
-        .flatten()
         .collect::<Vec<(isize, isize)>>();
 
     let mut number_string = String::new();
@@ -145,7 +144,7 @@ pub fn part2(input: &str) -> Solution {
     let number_coordinates: Vec<(Vec<(isize, isize)>, u32)> = schematic_grid
         .iter()
         .enumerate()
-        .map(|(y, c)| {
+        .flat_map(|(y, c)| {
             number_and_coords_vec.clear();
             c.iter().enumerate().for_each(|(x, c)| {
                 if x == 0 && number_string.len() != 0 {
@@ -168,7 +167,6 @@ pub fn part2(input: &str) -> Solution {
             });
             number_and_coords_vec.clone()
         })
-        .flatten()
         .collect();
     let mut result = 0;
     for (y_gear, x_gear) in gear_coordinates {

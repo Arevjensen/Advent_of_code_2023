@@ -34,7 +34,7 @@ pub fn part1(input: &str) -> Solution {
         .lines()
         .filter(|x| !x.is_empty())
         .enumerate()
-        .map(|line| {
+        .flat_map(|line| {
             line.1
                 .chars()
                 .enumerate()
@@ -51,7 +51,6 @@ pub fn part1(input: &str) -> Solution {
                 })
                 .collect::<HashMap<Coords, TileType>>()
         })
-        .flatten()
         .collect::<HashMap<Coords, TileType>>();
 
     let mut all_paths = Vec::new();
@@ -147,7 +146,7 @@ enum TileType {
 impl TileType {
     pub fn allowed_neighbours(&self, coords: &Coords) -> Vec<Coords> {
         match self {
-            TileType::Vertical => vec![
+            TileType::Vertical => [
                 Coords {
                     x: coords.x,
                     y: coords.y - 1,
@@ -159,9 +158,9 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
-            TileType::Horizontal => vec![
+            TileType::Horizontal => [
                 Coords {
                     x: coords.x + 1,
                     y: coords.y,
@@ -173,9 +172,9 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
-            TileType::NorthEast => vec![
+            TileType::NorthEast => [
                 Coords {
                     x: coords.x,
                     y: coords.y - 1,
@@ -187,9 +186,9 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
-            TileType::NorthWest => vec![
+            TileType::NorthWest => [
                 Coords {
                     x: coords.x,
                     y: coords.y - 1,
@@ -201,9 +200,9 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
-            TileType::SouthWest => vec![
+            TileType::SouthWest => [
                 Coords {
                     x: coords.x,
                     y: coords.y + 1,
@@ -215,9 +214,9 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
-            TileType::SouthEast => vec![
+            TileType::SouthEast => [
                 Coords {
                     x: coords.x,
                     y: coords.y + 1,
@@ -229,10 +228,10 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
             TileType::Ground => vec![],
-            TileType::Start => vec![
+            TileType::Start => [
                 Coords {
                     x: coords.x + 1,
                     y: coords.y,
@@ -252,7 +251,7 @@ impl TileType {
             ]
             .iter()
             .filter(|x| *x != coords)
-            .map(|x| x.clone())
+            .cloned()
             .collect(),
         }
     }
@@ -324,7 +323,7 @@ pub fn part2(input: &str) -> Solution {
         .lines()
         .filter(|x| !x.is_empty())
         .enumerate()
-        .map(|line| {
+        .flat_map(|line| {
             line.1
                 .chars()
                 .enumerate()
@@ -341,7 +340,6 @@ pub fn part2(input: &str) -> Solution {
                 })
                 .collect::<HashMap<Coords, TileType>>()
         })
-        .flatten()
         .collect::<HashMap<Coords, TileType>>();
 
     let mut all_paths = Vec::new();
