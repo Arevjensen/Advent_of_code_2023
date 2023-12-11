@@ -140,10 +140,10 @@ struct Coords {
 }
 
 pub fn part2(input: &str, duplicator: usize) -> Solution {
-    let grid_width = input.lines().last().unwrap().len();
-    let grid_height = input.lines().count();
+    let mut grid_width = input.lines().last().unwrap().len();
+    let mut grid_height = input.lines().count();
 
-    let indexes = (1..10000000).into_iter();
+    let indexes = (1..100000).into_iter();
     let galaxies_iter = input.lines().enumerate().flat_map(|(y, line)| {
         line.chars()
             .enumerate()
@@ -161,7 +161,7 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
 
     let mut galaxies_expanded = galaxies.clone();
 
-    for x in 0..grid_width {
+    for x in 0..grid_width.clone() {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.x == x)
@@ -177,10 +177,11 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
             galaxies_expanded
                 .iter_mut()
                 .filter(|galaxy| galaxies_above.contains(&galaxy.id))
-                .for_each(|x| x.location.x += duplicator);
+                .for_each(|x| x.location.x += duplicator - 1);
+            grid_width += duplicator - 1;
         }
     }
-    for y in 0..grid_height {
+    for y in 0..grid_height.clone() as usize {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.y == y)
@@ -195,7 +196,8 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
             galaxies_expanded
                 .iter_mut()
                 .filter(|galaxy| galaxies_above.contains(&galaxy.id))
-                .for_each(|x| x.location.y += duplicator);
+                .for_each(|x| x.location.y += duplicator - 1);
+            grid_height += duplicator - 1;
         }
     }
     drop(galaxies);
@@ -224,13 +226,28 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
             let tmp = x_diff + y_diff;
             // if galaxy.id == 1 {
             //     dbg!("new outline");
-            //     dbg!(&galaxy, &other_galax, &tmp, x_diff.abs(), y_diff.abs());
+            //     dbg!(&galaxy, &other_galax, &tmp, x_diff, y_diff);
             // }
             vec_of_shortest_paths.push(tmp)
         }
     }
-    dbg!(&vec_of_shortest_paths);
-    let result: usize = vec_of_shortest_paths.iter().sum::<usize>();
+    let result: usize = vec_of_shortest_paths.iter().sum();
+
+    //Print the final grid
+    // for y in 0..grid_height {
+    //     for x in 0..grid_width {
+    //         let maybe_galaxy = galaxies_expanded
+    //             .iter()
+    //             .filter(|gal| gal.location.x == x && gal.location.y == y)
+    //             .last();
+    //         if let Some(galaxy) = maybe_galaxy {
+    //             print!("{}", galaxy.id);
+    //         } else {
+    //             print!(".")
+    //         }
+    //     }
+    //     println!("");
+    // }
 
     Solution::from(result)
 }
@@ -260,8 +277,8 @@ mod tests {
     }
     #[test]
     fn test_part_2_one() {
-        let fasit = Solution::from(375usize);
-        let part_solution = part2(TEST_INPUT_ONE, 1);
+        let fasit = Solution::from(374usize);
+        let part_solution = part2(TEST_INPUT_ONE, 2);
         assert_eq!(fasit, part_solution);
     }
     #[test]
