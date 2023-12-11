@@ -25,53 +25,51 @@ pub fn part1(input: &str) -> Solution {
 
     for (line_idx, line) in schematic_grid.iter().enumerate() {
         for (char_idx, character) in line.iter().enumerate() {
-            if char_idx == 0 && number_string.len() != 0 && touching_symbol {
+            if char_idx == 0 && !number_string.is_empty() && touching_symbol {
                 dbg!(&number_string);
                 let number = number_string.parse::<u32>().unwrap();
                 result += number;
                 touching_symbol = false;
                 number_string = "".to_string();
             }
-            if character.is_digit(10) {
+            if character.is_ascii_digit() {
                 number_string += &character.to_string();
                 if !touching_symbol {
                     touching_symbol = check_neigtbours_part_1(line_idx, char_idx, &schematic_grid);
                 }
+            } else if touching_symbol {
+                let number = number_string.parse::<u32>().unwrap();
+                result += number;
+                touching_symbol = false;
+                number_string = "".to_string();
             } else {
-                if touching_symbol {
-                    let number = number_string.parse::<u32>().unwrap();
-                    result += number;
-                    touching_symbol = false;
-                    number_string = "".to_string();
-                } else {
-                    number_string = "".to_string();
-                    touching_symbol = false;
-                }
+                number_string = "".to_string();
+                touching_symbol = false;
             }
         }
     }
     Solution::from(result)
 }
 
-fn check_neigtbours_part_1(line: usize, x: usize, check_vec: &Vec<Vec<char>>) -> bool {
+fn check_neigtbours_part_1(line: usize, x: usize, check_vec: &[Vec<char>]) -> bool {
     if line != 0 {
         if let Some(line_above) = check_vec.get(line - 1) {
             if x != 0 {
                 if let Some(up_l) = line_above.get(x - 1) {
-                    match *up_l != '.' && !up_l.is_digit(10) {
+                    match *up_l != '.' && !up_l.is_ascii_digit() {
                         true => return true,
                         false => (),
                     }
                 }
             }
             if let Some(up) = line_above.get(x) {
-                match *up != '.' && !up.is_digit(10) {
+                match *up != '.' && !up.is_ascii_digit() {
                     true => return true,
                     false => (),
                 }
             }
             if let Some(up_r) = line_above.get(x + 1) {
-                match *up_r != '.' && !up_r.is_digit(10) {
+                match *up_r != '.' && !up_r.is_ascii_digit() {
                     true => return true,
                     false => (),
                 }
@@ -82,20 +80,20 @@ fn check_neigtbours_part_1(line: usize, x: usize, check_vec: &Vec<Vec<char>>) ->
     if let Some(line_below) = check_vec.get(line + 1) {
         if x != 0 {
             if let Some(down_l) = line_below.get(x - 1) {
-                match *down_l != '.' && !down_l.is_digit(10) {
+                match *down_l != '.' && !down_l.is_ascii_digit() {
                     true => return true,
                     false => (),
                 }
             }
         }
         if let Some(down) = line_below.get(x) {
-            match *down != '.' && !down.is_digit(10) {
+            match *down != '.' && !down.is_ascii_digit() {
                 true => return true,
                 false => (),
             }
         }
         if let Some(down_r) = line_below.get(x + 1) {
-            match *down_r != '.' && !down_r.is_digit(10) {
+            match *down_r != '.' && !down_r.is_ascii_digit() {
                 true => return true,
                 false => (),
             }
@@ -104,14 +102,14 @@ fn check_neigtbours_part_1(line: usize, x: usize, check_vec: &Vec<Vec<char>>) ->
     if let Some(line_same) = check_vec.get(line) {
         if x != 0 {
             if let Some(same_l) = line_same.get(x - 1) {
-                match *same_l != '.' && !same_l.is_digit(10) {
+                match *same_l != '.' && !same_l.is_ascii_digit() {
                     true => return true,
                     false => (),
                 }
             }
         }
         if let Some(same_r) = line_same.get(x + 1) {
-            match *same_r != '.' && !same_r.is_digit(10) {
+            match *same_r != '.' && !same_r.is_ascii_digit() {
                 true => return true,
                 false => (),
             }
@@ -147,17 +145,17 @@ pub fn part2(input: &str) -> Solution {
         .flat_map(|(y, c)| {
             number_and_coords_vec.clear();
             c.iter().enumerate().for_each(|(x, c)| {
-                if x == 0 && number_string.len() != 0 {
+                if x == 0 && !number_string.is_empty() {
                     number_and_coords_vec
                         .push((number_coords.clone(), number_string.parse::<u32>().unwrap()));
                     number_string = "".to_string();
                     number_coords.clear();
                 }
-                if c.is_digit(10) {
+                if c.is_ascii_digit() {
                     number_string.push(*c);
                     number_coords.push((y as isize, x as isize));
                 } else {
-                    if number_string.len() != 0 {
+                    if !number_string.is_empty() {
                         number_and_coords_vec
                             .push((number_coords.clone(), number_string.parse::<u32>().unwrap()));
                     }
@@ -170,7 +168,7 @@ pub fn part2(input: &str) -> Solution {
         .collect();
     let mut result = 0;
     for (y_gear, x_gear) in gear_coordinates {
-        let near_coords = vec![
+        let near_coords = [
             (y_gear - 1, x_gear - 1),
             (y_gear - 1, x_gear),
             (y_gear - 1, x_gear + 1),

@@ -60,13 +60,13 @@ pub fn part1(input: &str) -> Solution {
         .map(|x| {
             let mut next_mapping = *x;
             for map in &source_to_destination_maps {
-                next_mapping = find_new_number_from_mapping(next_mapping, &map);
+                next_mapping = find_new_number_from_mapping(next_mapping, map);
             }
             next_mapping
         })
         .collect::<Vec<usize>>();
 
-    Solution::from(*seed_final_mappings.iter().min().unwrap() as usize)
+    Solution::from(*seed_final_mappings.iter().min().unwrap())
 }
 
 fn find_new_number_from_mapping(number: usize, mapping: &Vec<SourceToDestinationMap>) -> usize {
@@ -125,7 +125,7 @@ pub fn part2(input: &str) -> Solution {
                 .map(|x| {
                     let mut next_mapping = x;
                     for map in &source_to_destination_maps {
-                        next_mapping = find_new_number_from_mapping(next_mapping, &map);
+                        next_mapping = find_new_number_from_mapping(next_mapping, map);
                     }
                     next_mapping
                 })
@@ -134,7 +134,7 @@ pub fn part2(input: &str) -> Solution {
         })
         .collect::<Vec<usize>>();
 
-    Solution::from(*seed_final_mappings.iter().min().unwrap() as usize)
+    Solution::from(*seed_final_mappings.iter().min().unwrap())
 }
 
 #[cfg(test)]
@@ -178,14 +178,14 @@ humidity-to-location map:
 
     #[test]
     fn test_part_1() {
-        let fasit = Solution::from(35 as usize);
+        let fasit = Solution::from(35_usize);
         let part_solution = part1(TEST_INPUT_ONE);
         assert_eq!(fasit, part_solution);
     }
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(47 as usize);
+        let fasit = Solution::from(47_usize);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }

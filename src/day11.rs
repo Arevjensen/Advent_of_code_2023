@@ -1,5 +1,3 @@
-
-
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
 
@@ -18,13 +16,15 @@ pub fn run(part: &str) {
 pub fn part1(input: &str) -> Solution {
     let mut grid_width = input.lines().last().unwrap().len();
     let mut grid_height = input.lines().count();
+    let static_grid_width = grid_width;
+    let static_grid_height = grid_height;
 
-    let indexes = (1..100000).into_iter();
+    let indexes = 1..100000;
     let galaxies_iter = input.lines().enumerate().flat_map(|(y, line)| {
         line.chars()
             .enumerate()
             .filter(|x| x.1 == '#')
-            .map(move |(x, symbol)| Coords { x: x, y: y })
+            .map(move |(x, symbol)| Coords { x, y })
     });
 
     let galaxies = galaxies_iter
@@ -37,7 +37,7 @@ pub fn part1(input: &str) -> Solution {
 
     let mut galaxies_expanded = galaxies.clone();
 
-    for x in 0..grid_width.clone() {
+    for x in 0..static_grid_width {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.x == x)
@@ -57,7 +57,7 @@ pub fn part1(input: &str) -> Solution {
             grid_width += 1;
         }
     }
-    for y in 0..grid_height.clone() as usize {
+    for y in 0..static_grid_height {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.y == y)
@@ -122,7 +122,7 @@ pub fn part1(input: &str) -> Solution {
                 print!(".")
             }
         }
-        println!("");
+        println!();
     }
 
     Solution::from(result)
@@ -142,13 +142,15 @@ struct Coords {
 pub fn part2(input: &str, duplicator: usize) -> Solution {
     let mut grid_width = input.lines().last().unwrap().len();
     let mut grid_height = input.lines().count();
+    let static_grid_width = grid_width;
+    let static_grid_height = grid_height;
 
-    let indexes = (1..100000).into_iter();
+    let indexes = 1..100000;
     let galaxies_iter = input.lines().enumerate().flat_map(|(y, line)| {
         line.chars()
             .enumerate()
             .filter(|x| x.1 == '#')
-            .map(move |(x, symbol)| Coords { x: x, y: y })
+            .map(move |(x, symbol)| Coords { x, y })
     });
 
     let galaxies = galaxies_iter
@@ -161,7 +163,7 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
 
     let mut galaxies_expanded = galaxies.clone();
 
-    for x in 0..grid_width.clone() {
+    for x in 0..static_grid_width {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.x == x)
@@ -181,7 +183,7 @@ pub fn part2(input: &str, duplicator: usize) -> Solution {
             grid_width += duplicator - 1;
         }
     }
-    for y in 0..grid_height.clone() as usize {
+    for y in 0..static_grid_height {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.y == y)

@@ -19,16 +19,16 @@ pub fn part1(input: &str) -> Solution {
         .lines()
         .map(|line| {
             let (_, winners_and_scratched) = line.split_once(": ").unwrap();
-            let winners_scarched_split = winners_and_scratched.split_once("|").unwrap();
+            let winners_scarched_split = winners_and_scratched.split_once('|').unwrap();
             let (winners_str, scratched_str) = (winners_scarched_split.0, winners_scarched_split.1);
             let winners_vec = winners_str
                 .trim()
-                .split(" ")
+                .split(' ')
                 .filter_map(|x| x.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>();
             let sratched_vec = scratched_str
                 .trim()
-                .split(" ")
+                .split(' ')
                 .filter_map(|x| x.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>();
             (winners_vec, sratched_vec)
@@ -57,16 +57,16 @@ pub fn part2(input: &str) -> Solution {
         .lines()
         .map(|line| {
             let (_, winners_and_scratched) = line.split_once(": ").unwrap();
-            let winners_scarched_split = winners_and_scratched.split_once("|").unwrap();
+            let winners_scarched_split = winners_and_scratched.split_once('|').unwrap();
             let (winners_str, scratched_str) = (winners_scarched_split.0, winners_scarched_split.1);
             let winners_vec = winners_str
                 .trim()
-                .split(" ")
+                .split(' ')
                 .filter_map(|x| x.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>();
             let sratched_vec = scratched_str
                 .trim()
-                .split(" ")
+                .split(' ')
                 .filter_map(|x| x.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>();
             (winners_vec, sratched_vec)
@@ -82,7 +82,7 @@ pub fn part2(input: &str) -> Solution {
         let mut game_score = 0;
         let hashmap_key_for_game = zero_idx as u32 + 1;
         for winning_number in game.0.iter() {
-            if game.1.contains(&winning_number) {
+            if game.1.contains(winning_number) {
                 if game_score == 0 {
                     game_score = 1;
                 } else {
@@ -91,11 +91,11 @@ pub fn part2(input: &str) -> Solution {
             }
         }
         if game_score > 0 {
+            let number_of_cards_to_add =
+                *number_of_same_cards.get(&(hashmap_key_for_game)).unwrap();
             for hashmap_idx in 1..=game_score {
-                let number_of_cards_to_add =
-                    1 * number_of_same_cards.get(&(hashmap_key_for_game)).unwrap();
                 if let Some(game_to_add_to) =
-                    number_of_same_cards.get_mut(&(&hashmap_key_for_game + hashmap_idx))
+                    number_of_same_cards.get_mut(&(hashmap_key_for_game + hashmap_idx))
                 {
                     *game_to_add_to += number_of_cards_to_add;
                 }
@@ -138,7 +138,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11";
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(30);
+        let fasit = Solution::from(30_u32);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }

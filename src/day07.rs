@@ -86,7 +86,7 @@ impl FromStr for HandType {
         });
 
         let mut card_counts_for_hand = Vec::from_iter(hash_map.values());
-        card_counts_for_hand.sort_by(|a, b| b.cmp(&a));
+        card_counts_for_hand.sort_by(|a, b| b.cmp(a));
 
         let highest = *card_counts_for_hand.get(0).unwrap_or(&&0);
         let highest = highest + jokers;
@@ -142,7 +142,7 @@ pub fn part1(input: &str) -> Solution {
     let mut hands = input
         .lines()
         .map(|x| {
-            let (cards, bid) = x.split_once(" ").unwrap();
+            let (cards, bid) = x.split_once(' ').unwrap();
 
             let cards_vec = cards
                 .chars()
@@ -173,15 +173,15 @@ pub fn part2(input: &str) -> Solution {
     let mut hands = input
         .lines()
         .map(|x| {
-            let (cards, bid) = x.split_once(" ").unwrap();
+            let (cards, bid) = x.split_once(' ').unwrap();
 
             let cards_vec = cards
-                .replace("J", "P")
+                .replace('J', "P")
                 .chars()
                 .map(|x| x.to_string().parse::<Card>().unwrap())
                 .collect::<Vec<Card>>();
             let bid_number = bid.parse::<usize>().unwrap();
-            let hand_type = cards.replace("J", "P").parse::<HandType>().unwrap();
+            let hand_type = cards.replace('J', "P").parse::<HandType>().unwrap();
 
             Hand {
                 cards: cards_vec,

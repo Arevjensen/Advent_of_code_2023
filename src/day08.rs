@@ -27,10 +27,9 @@ pub fn part1(input: &str) -> Solution {
 
     let location_traversal = location_data
         .lines()
-        .into_iter()
         .map(|x| {
             let (key, paths) = x.split_once(" = ").unwrap();
-            let binding = paths.replace("(", "").replace(")", "");
+            let binding = paths.replace(['(', ')'], "");
             let (left, rigth) = binding.trim().split_once(", ").unwrap();
             let location_routes = LocationRoutes {
                 left: left.to_string(),
@@ -44,7 +43,7 @@ pub fn part1(input: &str) -> Solution {
     let mut steps = 0;
 
     for (idx, x) in instructions.chars().cycle().enumerate() {
-        if *current_location == "ZZZ".to_string() {
+        if current_location == "ZZZ" {
             steps = idx;
             break;
         }
@@ -65,16 +64,15 @@ pub fn part2(input: &str) -> Solution {
 
     let location_traversal = location_data
         .lines()
-        .into_iter()
         .map(|x| {
             let (key, paths) = x.split_once(" = ").unwrap();
-            let binding = paths.replace("(", "").replace(")", "");
+            let binding = paths.replace(['(', ')'], "");
             let (left, rigth) = binding.trim().split_once(", ").unwrap();
             let location_routes = LocationRoutes {
                 left: left.to_string(),
                 right: rigth.to_string(),
             };
-            if key.chars().last().unwrap() == 'A' {
+            if key.ends_with('A') {
                 vec_start_locations.push(key.to_string());
             }
             (key.to_string(), location_routes)
@@ -86,7 +84,7 @@ pub fn part2(input: &str) -> Solution {
     for start_location in vec_start_locations {
         let mut current_location = start_location.clone();
         for (idx, x) in instructions.chars().cycle().enumerate() {
-            if current_location.chars().last().unwrap() == 'Z' {
+            if current_location.ends_with('Z') {
                 number_of_steps_for_each_start.insert(start_location.clone(), idx);
                 break;
             }
@@ -99,7 +97,7 @@ pub fn part2(input: &str) -> Solution {
         }
     }
 
-    let steps_as_vec = Vec::from_iter(number_of_steps_for_each_start.values().map(|x| *x));
+    let steps_as_vec = Vec::from_iter(number_of_steps_for_each_start.values().copied());
     let result = lcm(steps_as_vec.as_slice());
 
     Solution::Usize(result)

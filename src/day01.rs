@@ -16,11 +16,9 @@ pub fn run(part: &str) {
 pub fn part1(input: &str) -> Solution {
     let result = input
         .split('\n')
-        .into_iter()
         .map(|x| {
             x.chars()
-                .into_iter()
-                .filter(|x| x.is_digit(10))
+                .filter(|x| x.is_ascii_digit())
                 .collect::<String>()
         })
         .collect::<Vec<String>>();
@@ -90,7 +88,7 @@ fn valid_checker(check: &str, values: &Vec<&str>) -> Option<(&'static str, Strin
             ));
         }
     }
-    return None;
+    None
 }
 
 fn number_string_matcher(check: &str) -> Option<&'static str> {

@@ -60,13 +60,7 @@ pub fn part1(input: &str) -> Solution {
                 let mut coords_in_direction = HashSet::new();
                 coords_in_direction.insert(start_neighbour.clone());
                 for next in coords_exist.allowed_neighbours(&start_neighbour) {
-                    recursive_path_finder(
-                        &start_neighbour,
-                        &&next,
-                        &mut coords_in_direction,
-                        &grid,
-                        &start_coords,
-                    )
+                    recursive_path_finder(&start_neighbour, &next, &mut coords_in_direction, &grid)
                 }
                 all_paths.push(coords_in_direction);
             }
@@ -108,19 +102,18 @@ fn recursive_path_finder(
     destination: &Coords,
     coords_so_far: &mut HashSet<Coords>,
     grid: &HashMap<Coords, TileType>,
-    goal: &Coords,
 ) {
-    if check_allowed_entry(&current, &destination, &grid) {
+    if check_allowed_entry(current, destination, grid) {
         coords_so_far.insert(destination.clone());
         for next_desination in grid
             .get(destination)
             .unwrap()
             .allowed_neighbours(destination)
         {
-            if check_allowed_entry(&destination, &next_desination, &grid)
+            if check_allowed_entry(destination, &next_desination, grid)
                 && !coords_so_far.contains(&next_desination)
             {
-                recursive_path_finder(destination, &next_desination, coords_so_far, grid, goal);
+                recursive_path_finder(destination, &next_desination, coords_so_far, grid);
             }
         }
     }
@@ -298,7 +291,7 @@ fn check_allowed_entry(
     if let Some(destination_value) = grid.get(destination) {
         if destination_value
             .allowed_neighbours(destination)
-            .contains(&&source)
+            .contains(source)
         {
             return true;
         }
@@ -349,13 +342,7 @@ pub fn part2(input: &str) -> Solution {
                 let mut coords_in_direction = HashSet::new();
                 coords_in_direction.insert(start_neighbour.clone());
                 for next in coords_exist.allowed_neighbours(&start_neighbour) {
-                    recursive_path_finder(
-                        &start_neighbour,
-                        &&next,
-                        &mut coords_in_direction,
-                        &grid,
-                        &start_coords,
-                    )
+                    recursive_path_finder(&start_neighbour, &next, &mut coords_in_direction, &grid)
                 }
                 all_paths.push(coords_in_direction);
             }
@@ -382,8 +369,8 @@ pub fn part2(input: &str) -> Solution {
     for tile in grid.keys() {
         if !maze.contains(tile) {
             let mut is_inside = false;
-            for x in -1..=tile.x as isize {
-                let check_coords = Coords { x: x, y: tile.y };
+            for x in -1..=tile.x {
+                let check_coords = Coords { x, y: tile.y };
                 if let Some(tube_piece) = maze.get(&check_coords) {
                     let tile_type = grid.get(tube_piece).unwrap();
                     match tile_type {

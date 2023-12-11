@@ -16,12 +16,11 @@ pub fn run(part: &str) {
 }
 
 pub fn part1(input: &str) -> Solution {
-    let (time_str, distance_str) = input.split_once("\n").unwrap();
+    let (time_str, distance_str) = input.split_once('\n').unwrap();
     let times = time_str
         .split_once(": ")
         .unwrap()
         .1
-        .trim()
         .split_whitespace()
         .filter_map(|x| x.trim().parse::<usize>().ok());
 
@@ -29,7 +28,6 @@ pub fn part1(input: &str) -> Solution {
         .split_once(": ")
         .unwrap()
         .1
-        .trim()
         .split_whitespace()
         .filter_map(|x| x.trim().parse::<usize>().ok());
 
@@ -59,13 +57,13 @@ pub fn part1(input: &str) -> Solution {
 }
 
 pub fn part2(input: &str) -> Solution {
-    let (time_str, distance_str) = input.split_once("\n").unwrap();
+    let (time_str, distance_str) = input.split_once('\n').unwrap();
     let time = time_str
         .split_once(": ")
         .unwrap()
         .1
         .trim()
-        .replace(" ", "")
+        .replace(' ', "")
         .parse::<usize>()
         .unwrap();
 
@@ -74,7 +72,7 @@ pub fn part2(input: &str) -> Solution {
         .unwrap()
         .1
         .trim()
-        .replace(" ", "")
+        .replace(' ', "")
         .parse::<usize>()
         .unwrap();
 
@@ -99,7 +97,7 @@ Distance:  9  40  200";
 
     #[test]
     fn test_part_1() {
-        let fasit = Solution::from(288 as usize);
+        let fasit = Solution::from(288_usize);
         let part_solution = part1(TEST_INPUT_ONE);
         assert_eq!(fasit, part_solution);
     }

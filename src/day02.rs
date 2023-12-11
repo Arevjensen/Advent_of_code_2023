@@ -29,11 +29,11 @@ pub fn part1(input: &str) -> Solution {
         .enumerate()
         .map(|(idx, line)| {
             let (_, moves) = line.split_once(": ").unwrap();
-            let draws = moves.split(";");
+            let draws = moves.split(';');
             let (mut blue, mut red, mut green) = (0, 0, 0);
             for balls in draws {
-                balls.split(",").for_each(|colour| {
-                    if let Some((amount, colour)) = colour.trim().split_once(" ") {
+                balls.split(',').for_each(|colour| {
+                    if let Some((amount, colour)) = colour.trim().split_once(' ') {
                         match colour {
                             "red" => red = cmp::max(red, amount.parse().unwrap()),
                             "green" => green = cmp::max(green, amount.parse().unwrap()),
@@ -45,7 +45,7 @@ pub fn part1(input: &str) -> Solution {
             }
             let index = idx + 1;
             Game {
-                index: index,
+                index,
                 red,
                 blue,
                 green,
@@ -68,11 +68,11 @@ pub fn part2(input: &str) -> Solution {
         .enumerate()
         .map(|(idx, line)| {
             let (_, moves) = line.split_once(": ").unwrap();
-            let draws = moves.split(";");
+            let draws = moves.split(';');
             let (mut blue, mut red, mut green) = (0, 0, 0);
             for balls in draws {
-                balls.split(",").for_each(|colour| {
-                    let (amount, colour) = colour.trim().split_once(" ").unwrap();
+                balls.split(',').for_each(|colour| {
+                    let (amount, colour) = colour.trim().split_once(' ').unwrap();
                     match colour {
                         "red" => red = cmp::max(red, amount.parse().unwrap()),
                         "green" => green = cmp::max(green, amount.parse().unwrap()),
@@ -83,7 +83,7 @@ pub fn part2(input: &str) -> Solution {
             }
             let index = idx + 1;
             Game {
-                index: index,
+                index,
                 red,
                 blue,
                 green,
@@ -123,7 +123,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(2286);
+        let fasit = Solution::from(2286_u32);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }
