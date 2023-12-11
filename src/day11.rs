@@ -8,7 +8,7 @@ const DAY: &str = "11";
 pub fn run(part: &str) {
     let result = match part {
         "1" => part1(loader::read_text_from_file(part, DAY).as_str()),
-        "2" => part2(loader::read_text_from_file(part, DAY).as_str()),
+        "2" => part2(loader::read_text_from_file(part, DAY).as_str(), 1000000),
         _ => unimplemented!(),
     };
     println!("Solution for part {} on day {} is:", part, DAY);
@@ -16,18 +16,15 @@ pub fn run(part: &str) {
 }
 
 pub fn part1(input: &str) -> Solution {
-    let mut grid_width = input.lines().last().unwrap().len() as isize;
-    let mut grid_height = input.lines().count() as isize as isize;
+    let mut grid_width = input.lines().last().unwrap().len();
+    let mut grid_height = input.lines().count();
 
     let indexes = (1..100000).into_iter();
     let galaxies_iter = input.lines().enumerate().flat_map(|(y, line)| {
         line.chars()
             .enumerate()
             .filter(|x| x.1 == '#')
-            .map(move |(x, symbol)| Coords {
-                x: x as isize,
-                y: y as isize,
-            })
+            .map(move |(x, symbol)| Coords { x: x, y: y })
     });
 
     let galaxies = galaxies_iter
@@ -40,7 +37,7 @@ pub fn part1(input: &str) -> Solution {
 
     let mut galaxies_expanded = galaxies.clone();
 
-    for x in 0..grid_width.clone() as isize {
+    for x in 0..grid_width.clone() {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.x == x)
@@ -60,7 +57,7 @@ pub fn part1(input: &str) -> Solution {
             grid_width += 1;
         }
     }
-    for y in 0..grid_height.clone() as isize {
+    for y in 0..grid_height.clone() as usize {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.y == y)
@@ -105,16 +102,16 @@ pub fn part1(input: &str) -> Solution {
             let tmp = x_diff + y_diff;
             if galaxy.id == 1 {
                 dbg!("new outline");
-                dbg!(&galaxy, &other_galax, &tmp, x_diff.abs(), y_diff.abs());
+                dbg!(&galaxy, &other_galax, &tmp, x_diff, y_diff);
             }
             vec_of_shortest_paths.push(tmp)
         }
     }
-    let result: isize = vec_of_shortest_paths.iter().sum();
+    let result: usize = vec_of_shortest_paths.iter().sum();
 
     //Print the final grid
-    for y in 0..grid_height as isize {
-        for x in 0..grid_width as isize {
+    for y in 0..grid_height {
+        for x in 0..grid_width {
             let maybe_galaxy = galaxies_expanded
                 .iter()
                 .filter(|gal| gal.location.x == x && gal.location.y == y)
@@ -138,23 +135,20 @@ struct Galaxy {
 }
 #[derive(Debug, Clone, Copy)]
 struct Coords {
-    x: isize,
-    y: isize,
+    x: usize,
+    y: usize,
 }
 
-pub fn part2(input: &str) -> Solution {
-    let grid_width = input.lines().last().unwrap().len() as isize;
-    let grid_height = input.lines().count() as isize as isize;
+pub fn part2(input: &str, duplicator: usize) -> Solution {
+    let grid_width = input.lines().last().unwrap().len();
+    let grid_height = input.lines().count();
 
     let indexes = (1..10000000).into_iter();
     let galaxies_iter = input.lines().enumerate().flat_map(|(y, line)| {
         line.chars()
             .enumerate()
             .filter(|x| x.1 == '#')
-            .map(move |(x, symbol)| Coords {
-                x: x as isize,
-                y: y as isize,
-            })
+            .map(move |(x, symbol)| Coords { x: x, y: y })
     });
 
     let galaxies = galaxies_iter
@@ -167,7 +161,7 @@ pub fn part2(input: &str) -> Solution {
 
     let mut galaxies_expanded = galaxies.clone();
 
-    for x in 0..grid_width as isize {
+    for x in 0..grid_width {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.x == x)
@@ -183,10 +177,10 @@ pub fn part2(input: &str) -> Solution {
             galaxies_expanded
                 .iter_mut()
                 .filter(|galaxy| galaxies_above.contains(&galaxy.id))
-                .for_each(|x| x.location.x += 100);
+                .for_each(|x| x.location.x += duplicator);
         }
     }
-    for y in 0..grid_height as isize {
+    for y in 0..grid_height {
         if galaxies
             .iter()
             .filter(|galaxy| galaxy.location.y == y)
@@ -201,7 +195,7 @@ pub fn part2(input: &str) -> Solution {
             galaxies_expanded
                 .iter_mut()
                 .filter(|galaxy| galaxies_above.contains(&galaxy.id))
-                .for_each(|x| x.location.y += 100);
+                .for_each(|x| x.location.y += duplicator);
         }
     }
     drop(galaxies);
@@ -235,7 +229,8 @@ pub fn part2(input: &str) -> Solution {
             vec_of_shortest_paths.push(tmp)
         }
     }
-    let result: isize = vec_of_shortest_paths.iter().sum();
+    dbg!(&vec_of_shortest_paths);
+    let result: usize = vec_of_shortest_paths.iter().sum::<usize>();
 
     Solution::from(result)
 }
@@ -255,18 +250,31 @@ mod tests {
 .......#..
 #...#.....";
     const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
+    const TEST_INPUT_THREE: &str = TEST_INPUT_ONE;
 
     #[test]
     fn test_part_1() {
-        let fasit = Solution::from(374isize);
+        let fasit = Solution::from(374usize);
         let part_solution = part1(TEST_INPUT_ONE);
         assert_eq!(fasit, part_solution);
     }
+    #[test]
+    fn test_part_2_one() {
+        let fasit = Solution::from(375usize);
+        let part_solution = part2(TEST_INPUT_ONE, 1);
+        assert_eq!(fasit, part_solution);
+    }
+    #[test]
+    fn test_part_hundred() {
+        let fasit = Solution::from(8410usize);
+        let my_soultion = part2(TEST_INPUT_TWO, 100);
+        assert_eq!(fasit, my_soultion);
+    }
 
     #[test]
-    fn test_part_2() {
-        let fasit = Solution::from(8410);
-        let my_soultion = part2(TEST_INPUT_TWO);
+    fn test_part_2_ten() {
+        let fasit = Solution::from(1030usize);
+        let my_soultion = part2(TEST_INPUT_TWO, 10);
         assert_eq!(fasit, my_soultion);
     }
 }
