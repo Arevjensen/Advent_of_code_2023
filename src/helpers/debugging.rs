@@ -4,7 +4,7 @@ use std::io::{stdin, stdout, Read, Write};
 //Then press enter for next iteration
 pub fn pause() {
     let mut stdout = stdout();
-    stdout.write_all(b"Press Enter to continue...").unwrap();
+    stdout.write(b"Press Enter to continue...").unwrap();
     stdout.flush().unwrap();
-    stdin().read_exact(&mut [0]).unwrap();
+    stdin().read(&mut [0]).unwrap();
 }
