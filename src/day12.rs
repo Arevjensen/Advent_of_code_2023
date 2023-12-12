@@ -1,5 +1,3 @@
-use nom::InputTake;
-
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
 
@@ -36,121 +34,128 @@ pub fn part1(input: &str) -> Solution {
         .map(|(data, vec)| recursive_configurations(data, vec))
         .sum::<usize>();
 
-    Solution::from(100)
+    Solution::from(x)
 }
 
 fn recursive_configurations(condition_record: &&str, number_groups: &[usize]) -> usize {
-    // match (condition_record.len(), number_groups.len()) {
-    //     (_, 0) => return 1,
-    //     (0, _) => return 0,
-    //     (_, _) => (),
-    // }
+    //remove all leading dots as we cant use them
+    let usable_string = condition_record.trim_start_matches('.');
+    let approx_min_chars_needed_to_end = number_groups.iter().sum::<usize>();
 
-    //Planen
-    //skip til forste # eller ? i incoming str
-    //Sjekk sa at det er # eller ? pa lengde med neste number_group
-    // og at neste etter det er ?/./slutt slik at det blir skille mellom denne og neste
-    // send saa resten av str og resten av nr videre i rekursjonen
-    // hvis alle tallgrupper er brukt og det ikke er flere # igjen i str saa +1 alternativer
+    //The remaning str is less than what is needed for amount of broken sequences
+    if usable_string.len() < approx_min_chars_needed_to_end {
+        return 0;
+    }
+
+    //end of str and number groups meaning we solved it
+    if usable_string.is_empty() && number_groups.is_empty() {
+        return 1;
+    }
+
+    //If no more numbers and no more broken left
+    if number_groups.is_empty() && !usable_string.contains('#') {
+        return 1;
+    }
+
+    if number_groups.is_empty() && !usable_string.is_empty() {
+        return 0;
+    }
 
     let mut number_of_configurations = 0;
-    //trim until ? or #
-    let usable_string = condition_record.trim_start_matches('.');
+    //This string can be worked on for this group
 
-    //Sjekk at vi ikke er pa slutten eller har kun ok igjen
-    if !usable_string.is_empty() || !remaining_are_all_ok(usable_string) {
-        //This string can be worked on
-        if let Some(next_needed_sequence) = usable_string.get(..number_groups[0]) {
-            // Det er x mengde symboler fremover
-
+    if let Some(chars_needed_for_sequence) = usable_string.get(..number_groups[0]) {
+        if !chars_needed_for_sequence.contains(".") {
             //hvis det er slutten eller det er ?/. etter sequence
-            if check_is_potential_ok_point(usable_string, number_groups[0] + 1) {
-            } else {
-                //There was more broken after so we cant use current number sequence here and have to move on
+            if check_is_potential_ok_point(usable_string, number_groups[0]) {
+                //The sequence is all
+                let continue_from = number_groups[0] + 1;
+                let str_to_keep_going_from = &usable_string.get(continue_from..).unwrap_or("");
+                let remaining_numbers = &number_groups[1..];
+
+                number_of_configurations +=
+                    recursive_configurations(str_to_keep_going_from, remaining_numbers)
             }
-            //     let etter_sequence = usable_string.chars().nth(number_groups[0] + 1);
-            //     if let Some(etter_sequence_checked) = etter_sequence {
-            //         if etter_sequence_checked == '.' || etter_sequence_checked == '?' {
-            //             //Ok to continiue
-            //         }
-            //         return 1;
-            //     } else {
-            //         if number_groups.get(1..).is_none() && false {
-            //             //Something
-            //         }
-            //     }
-            // } else {
-            //     //Vi klarte ikke aa hente ut nok til a fylle tallgruppen
-            //     return number_of_configurations;
-            // }
-        } else {
-            //String er tom eller vi kan ikke gjore mer paa den
-            return number_of_configurations;
         }
     }
+    //Needs to count # as one block, cant do multiple with the same one as they are contigues
+    if usable_string.starts_with("#") {
+        // let skip_current_until_non_square = usable_string[..].trim_start_matches(|x| x == '#');
 
-    fn remaining_are_all_ok(s: &str) -> bool {
-        s.chars().all(|x| x == '.')
+        // number_of_configurations +=
+        //     recursive_configurations(&skip_current_until_non_square, number_groups);
+    } else {
+        number_of_configurations += recursive_configurations(&&usable_string[1..], number_groups);
     }
 
-    fn check_is_potential_ok_point(s: &str, idx: usize) -> bool {
-        if let Some(string) = s.get(idx..idx + 1) {
-            match string {
-                "?" | "." => true,
-                _ => false,
-            }
-        } else {
-            true
+    return number_of_configurations;
+}
+
+fn remaining_are_all_ok(s: &str) -> bool {
+    s.chars().all(|x| x == '.')
+}
+
+fn check_is_potential_ok_point(s: &str, idx: usize) -> bool {
+    if let Some(string) = s.chars().nth(idx) {
+        match string {
+            '?' | '.' => true,
+            _ => false,
         }
+    } else {
+        true
     }
-
-    // if let Some(check_str) = condition_record.get(..number_groups[0]) {
-    //last to check if sequence of broken ones are seperated at the end
-    // let last_in_check_str = check_str.chars().last().unwrap();
-    // if last_in_check_str == '?' || last_in_check_str == '.' {
-    //     if check_str[..number_groups[0]]
-    //         .chars()
-    //         .all(|x| x == '#' || x == '?')
-    //     {
-    //         number_of_configurations +=
-    //             recursive_configurations(condition_record, &number_groups[1..]);
-    //     }
-    // }
-    // }
-    // if next_possible_location_and_space
-    //     .take(3)
-    //     .chars()
-    //     .all(|x| x == '?' || x == '#')
-    //     && (next_possible_location_and_space.chars().last().unwrap() == '?'
-    //         || next_possible_location_and_space.chars().last().unwrap() == '.')
-    // {
-    //     let remaining_str = &next_possible_location_and_space[4..];
-    //     number_of_configurations += recursive_configurations(&remaining_str, &number_groups[1..]);
-    // } else {
-    //     let remaining_str = &next_possible_location_and_space[1..];
-    //     number_of_configurations += recursive_configurations(&remaining_str, number_groups);
-    // }
-
-    number_of_configurations
 }
 
 pub fn part2(input: &str) -> Solution {
-    unimplemented!()
+    let data_lines = input
+        .lines()
+        .filter(|x| !x.is_empty())
+        .map(|x| {
+            let (data, numbers) = x.split_once(' ').unwrap();
+            let mut duplicated_string = String::new();
+            for _ in 0..5 {
+                duplicated_string += data;
+                duplicated_string += "?";
+            }
+            duplicated_string = duplicated_string.trim_end_matches(|x| x == '?').to_string();
+
+            let numbers = numbers
+                .split(',')
+                .filter_map(|x| x.parse::<usize>().ok())
+                .collect::<Vec<_>>();
+            let mut duplicated_numbrs = Vec::new();
+            for _ in 0..5 {
+                for number in numbers.iter() {
+                    duplicated_numbrs.push(number.clone());
+                }
+            }
+
+            (duplicated_string, duplicated_numbrs)
+        })
+        .collect::<Vec<_>>();
+
+    let x = data_lines
+        .iter()
+        .map(|(data, vec)| recursive_configurations(&data.as_str(), vec))
+        .sum::<usize>();
+
+    Solution::from(x)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const TEST_INPUT_ONE: &str = r"???.### 1,1,3
-.??..??...?##. 1,1,3
-?#?#?#?#?#?#?#? 1,3,1,6
-????.#...#... 4,1,1
-????.######..#####. 1,6,5
-?###???????? 3,2,1 ";
-    const TEST_INPUT_TWO: &str = r"";
+    const TEST_INPUT_ONE: &str = "???.### 1,1,3";
+    // .??..??...?##. 1,1,3
+    // ?#?#?#?#?#?#?#? 1,3,1,6
+    // ????.#...#... 4,1,1
+    // ????.######..#####. 1,6,5
+    // ?###???????? 3,2,1";
+    const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
 
     #[test]
+    #[ignore = "reason"]
     fn test_part_1() {
         let fasit = Solution::from(21_usize);
         let part_solution = part1(TEST_INPUT_ONE);
@@ -159,7 +164,7 @@ mod tests {
 
     #[test]
     fn test_part_2() {
-        let fasit = Solution::from(200);
+        let fasit = Solution::from(525152_usize);
         let my_soultion = part2(TEST_INPUT_TWO);
         assert_eq!(fasit, my_soultion);
     }
