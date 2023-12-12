@@ -1,3 +1,5 @@
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
 
@@ -30,7 +32,7 @@ pub fn part1(input: &str) -> Solution {
         .collect::<Vec<_>>();
 
     let x = data_lines
-        .iter()
+        .par_iter()
         .map(|(data, vec)| recursive_configurations(data, vec))
         .sum::<usize>();
 
@@ -117,7 +119,7 @@ pub fn part2(input: &str) -> Solution {
                 duplicated_string += data;
                 duplicated_string += "?";
             }
-            duplicated_string = duplicated_string.trim_end_matches(|x| x == '?').to_string();
+            duplicated_string.pop();
 
             let numbers = numbers
                 .split(',')
@@ -146,16 +148,15 @@ pub fn part2(input: &str) -> Solution {
 mod tests {
     use super::*;
 
-    const TEST_INPUT_ONE: &str = "???.### 1,1,3";
-    // .??..??...?##. 1,1,3
-    // ?#?#?#?#?#?#?#? 1,3,1,6
-    // ????.#...#... 4,1,1
-    // ????.######..#####. 1,6,5
-    // ?###???????? 3,2,1";
+    const TEST_INPUT_ONE: &str = "???.### 1,1,3
+.??..??...?##. 1,1,3
+?#?#?#?#?#?#?#? 1,3,1,6
+????.#...#... 4,1,1
+????.######..#####. 1,6,5
+?###???????? 3,2,1";
     const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
 
     #[test]
-    #[ignore = "reason"]
     fn test_part_1() {
         let fasit = Solution::from(21_usize);
         let part_solution = part1(TEST_INPUT_ONE);
