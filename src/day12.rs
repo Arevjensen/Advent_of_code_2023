@@ -137,7 +137,7 @@ pub fn part2(input: &str) -> Solution {
         .collect::<Vec<_>>();
 
     let x = data_lines
-        .iter()
+        .par_iter()
         .map(|(data, vec)| recursive_configurations(&data.as_str(), vec))
         .sum::<usize>();
 
