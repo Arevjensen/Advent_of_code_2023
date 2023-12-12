@@ -1,4 +1,4 @@
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
@@ -138,7 +138,9 @@ pub fn part2(input: &str) -> Solution {
 
     let x = data_lines
         .par_iter()
-        .map(|(data, vec)| recursive_configurations(&data.as_str(), vec))
+        .enumerate()
+        .inspect(|x| println!("on line {}", x.0))
+        .map(|(_, (data, vec))| recursive_configurations(&data.as_str(), vec))
         .sum::<usize>();
 
     Solution::from(x)
