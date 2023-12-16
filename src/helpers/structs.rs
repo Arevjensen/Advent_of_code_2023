@@ -3,7 +3,7 @@ use std::clone;
 use num_traits::{AsPrimitive, PrimInt, ToPrimitive};
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Point2D<T: PrimInt> {
+pub struct Point2D<T> {
     pub x: T,
     pub y: T,
 }
