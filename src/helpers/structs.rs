@@ -8,6 +8,60 @@ pub struct Point2D<T> {
     pub y: T,
 }
 
+impl Point2D<usize> {
+    pub fn up(&self) -> Option<Point2D<usize>> {
+        if self.y > 0 {
+            Some(Point2D {
+                x: self.x,
+                y: self.y - 1,
+            })
+        } else {
+            None
+        }
+    }
+    pub fn left(&self) -> Option<Point2D<usize>> {
+        if self.x > 0 {
+            Some(Point2D {
+                x: self.x - 1,
+                y: self.y,
+            })
+        } else {
+            None
+        }
+    }
+    pub fn right(&self) -> Option<Point2D<usize>> {
+        Some(Point2D {
+            x: self.x + 1,
+            y: self.y,
+        })
+    }
+    pub fn down(&self) -> Option<Point2D<usize>> {
+        Some(Point2D {
+            x: self.x,
+            y: self.y + 1,
+        })
+    }
+
+    pub fn right_bounded(&self, x_bound: usize) -> Option<Point2D<usize>> {
+        if self.x + 1 >= x_bound {
+            return None;
+        }
+        Some(Point2D {
+            x: self.x + 1,
+            y: self.y,
+        })
+    }
+    pub fn down_bounded(&self, y_bound: usize) -> Option<Point2D<usize>> {
+        if self.y + 1 >= y_bound {
+            return None;
+        }
+        Some(Point2D {
+            x: self.x,
+            y: self.y + 1,
+        })
+    }
+}
+
 impl<T: ToPrimitive + PrimInt> Point2D<T> {
     pub fn to_grid_index(&self, upper_x: T, upper_y: T) -> Option<usize> {
         let (self_x_option, self_y_option) = (self.x.to_usize(), self.y.to_usize());
