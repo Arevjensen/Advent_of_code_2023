@@ -1,7 +1,4 @@
-use std::collections::{HashMap, HashSet};
-
 use pathfinding::directed::dijkstra::dijkstra;
-use pathfinding::grid;
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
@@ -53,7 +50,6 @@ pub fn part1(input: &str) -> Solution {
         .min()
         .unwrap();
 
-    //Added final tile manually cause I'm lazy :P
     Solution::from(result)
 }
 #[derive(Debug)]
@@ -249,8 +245,8 @@ pub fn part2(input: &str) -> Solution {
     };
 
     let next_directions = [
-        (start.down().unwrap(), (Direction::Down, 1_usize)),
-        (start.right().unwrap(), (Direction::Right, 1_usize)),
+        (start.down().unwrap(), (Direction::Down, 2_usize)),
+        (start.right().unwrap(), (Direction::Right, 2_usize)),
     ];
 
     let result = next_directions
@@ -269,7 +265,7 @@ fn path_test_2(
     let x = dijkstra(
         &start,
         |x| successors_2(&x.0, x.clone().1, grid),
-        |x| x.0 == goal,
+        |x| x.0 == goal && x.1 .1 > 3,
     );
     if let Some(map) = x {
         // dbg!(&map);
@@ -317,6 +313,7 @@ fn path_test_2(
             println!()
         }
         println!("Splitter");
+        println!("{}", sum);
         return sum;
     }
     10000000
@@ -353,7 +350,7 @@ fn next_locations_2(
 ) -> Vec<(Option<Point2D<usize>>, (Direction, usize))> {
     match direction.0 {
         Direction::Up => {
-            if direction.1 <= 4 {
+            if direction.1 < 4 {
                 vec![(location.up(), (direction.0.clone(), direction.1 + 1))]
             } else if direction.1 == 10 {
                 vec![
@@ -374,7 +371,7 @@ fn next_locations_2(
                     (location.left(), (Direction::Left, 1)),
                     (location.right_bounded(input.width), (Direction::Right, 1)),
                 ]
-            } else if direction.1 <= 4 {
+            } else if direction.1 < 4 {
                 vec![(
                     location.down_bounded(input.height),
                     (direction.0.clone(), direction.1 + 1),
@@ -396,7 +393,7 @@ fn next_locations_2(
                     (location.down_bounded(input.height), (Direction::Down, 1)),
                     (location.up(), (Direction::Up, 1)),
                 ]
-            } else if direction.1 <= 4 {
+            } else if direction.1 < 4 {
                 vec![(location.left(), (direction.0.clone(), direction.1 + 1))]
             } else {
                 vec![
@@ -412,7 +409,7 @@ fn next_locations_2(
                     (location.down_bounded(input.height), (Direction::Down, 1)),
                     (location.up(), (Direction::Up, 1)),
                 ]
-            } else if direction.1 <= 4 {
+            } else if direction.1 < 4 {
                 vec![(
                     location.right_bounded(input.width),
                     (direction.0.clone(), direction.1 + 1),
@@ -433,9 +430,11 @@ fn next_locations_2(
 
 #[cfg(test)]
 mod tests {
+    use rstest::rstest;
+
     use super::*;
 
-    const TEST_INPUT_ONE: &str = r"2413432311323
+    const TEST_INPUT_ONE: &str = "2413432311323
 3215453535623
 3255245654254
 3446585845452
@@ -448,7 +447,12 @@ mod tests {
 1224686865563
 2546548887735
 4322674655533";
-    const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
+    // const TEST_INPUT_TWO: &str = TEST_INPUT_ONE;
+    const TEST_INPUT_TWO: &str = "111111111111
+999999999991
+999999999991
+999999999991
+999999999991";
 
     #[test]
     fn test_part_1() {
@@ -457,10 +461,12 @@ mod tests {
         assert_eq!(fasit, part_solution);
     }
 
-    #[test]
-    fn test_part_2() {
-        let fasit = Solution::from(94);
-        let my_soultion = part2(TEST_INPUT_TWO);
+    #[rstest]
+    #[case(TEST_INPUT_ONE, 94_usize)]
+    #[case(TEST_INPUT_TWO, 71_usize)]
+    fn test_part_2(#[case] input: &str, #[case] solution: usize) {
+        let fasit = Solution::from(solution);
+        let my_soultion = part2(input);
         assert_eq!(fasit, my_soultion);
     }
 }
