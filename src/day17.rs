@@ -192,7 +192,7 @@ fn next_locations(
                 vec![
                     (location.down_bounded(input.height), (Direction::Down, 1)),
                     (location.left(), (direction.0.clone(), direction.1 + 1)),
-                    (location.right_bounded(input.width), (Direction::Right, 1)),
+                    (location.up(), (Direction::Up, 1)),
                 ]
             }
         }
