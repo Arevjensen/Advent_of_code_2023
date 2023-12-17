@@ -265,7 +265,7 @@ fn path_test_2(
     let x = dijkstra(
         &start,
         |x| successors_2(&x.0, x.clone().1, grid),
-        |x| x.0 == goal && x.1 .1 > 3,
+        |x| x.0 == goal && x.1 .1 >= 4,
     );
     if let Some(map) = x {
         // dbg!(&map);
@@ -288,13 +288,13 @@ fn path_test_2(
                     sum += location_value;
 
                     print!(
-                        "{}",
-                        match value.1 .0 {
-                            Direction::Up => "^",
-                            Direction::Down => "v",
-                            Direction::Left => "<",
-                            Direction::Right => ">",
-                        }
+                        "#",
+                        // match value.1 .0 {
+                        //     Direction::Up => "^",
+                        //     Direction::Down => "v",
+                        //     Direction::Left => "<",
+                        //     Direction::Right => ">",
+                        // }
                     );
                 } else {
                     let idx = Point2D {
@@ -302,11 +302,11 @@ fn path_test_2(
                         y: y_loop,
                     };
                     print!(
-                        "{}",
-                        grid.tiles
-                            .chars()
-                            .nth(idx.to_grid_index(grid.width, grid.height).unwrap())
-                            .unwrap()
+                        ".",
+                        // grid.tiles
+                        //     .chars()
+                        //     .nth(idx.to_grid_index(grid.width, grid.height).unwrap())
+                        //     .unwrap()
                     );
                 }
             }
@@ -399,7 +399,7 @@ fn next_locations_2(
                 vec![
                     (location.down_bounded(input.height), (Direction::Down, 1)),
                     (location.left(), (direction.0.clone(), direction.1 + 1)),
-                    (location.right_bounded(input.width), (Direction::Right, 1)),
+                    (location.up(), (Direction::Up, 1)),
                 ]
             }
         }
