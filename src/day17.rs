@@ -44,9 +44,6 @@ pub fn part1(input: &str) -> Solution {
     let result = next_directions
         .iter()
         .map(|x| path_test(x.clone(), goal.clone(), &grid))
-        .inspect(|x| {
-            dbg!(&x);
-        })
         .min()
         .unwrap();
 
@@ -70,7 +67,6 @@ fn path_test(
         |x| x.0 == goal,
     );
     if let Some(map) = x {
-        // dbg!(&map);
         let mut sum = 0;
         for y_loop in 0..grid.height {
             for x_loop in 0..grid.width {
@@ -114,7 +110,6 @@ fn path_test(
             }
             println!()
         }
-        println!("Splitter");
         return sum;
     }
     10000000
@@ -268,7 +263,6 @@ fn path_test_2(
         |x| x.0 == goal && x.1 .1 >= 4,
     );
     if let Some(map) = x {
-        // dbg!(&map);
         let mut sum = 0;
         for y_loop in 0..grid.height {
             for x_loop in 0..grid.width {
@@ -312,8 +306,6 @@ fn path_test_2(
             }
             println!()
         }
-        println!("Splitter");
-        println!("{}", sum);
         return sum;
     }
     10000000
