@@ -8,6 +8,36 @@ pub struct Point2D<T> {
     pub y: T,
 }
 
+impl Point2D<i32> {
+    pub fn up(&self) -> Point2D<i32> {
+        Point2D {
+            x: self.x,
+            y: self.y - 1,
+        }
+    }
+
+    pub fn down(&self) -> Point2D<i32> {
+        Point2D {
+            x: self.x,
+            y: self.y + 1,
+        }
+    }
+
+    pub fn left(&self) -> Point2D<i32> {
+        Point2D {
+            x: self.x - 1,
+            y: self.y,
+        }
+    }
+
+    pub fn rigth(&self) -> Point2D<i32> {
+        Point2D {
+            x: self.x + 1,
+            y: self.y,
+        }
+    }
+}
+
 impl Point2D<usize> {
     pub fn up(&self) -> Option<Point2D<usize>> {
         if self.y > 0 {
