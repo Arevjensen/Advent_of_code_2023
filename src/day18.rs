@@ -1,3 +1,5 @@
+use geo::{line_string, Area, Coord, LineString, Polygon};
+use itertools::Itertools;
 use pathfinding::directed::bfs::bfs_reach;
 use pathfinding::grid;
 
@@ -115,12 +117,12 @@ struct Cube {
 }
 
 pub fn part2(input: &str) -> Solution {
-    let mut lagoon_grid: Vec<Cube> = Vec::new();
+    let mut lagoon_grid: Vec<Point2D<i32>> = Vec::new();
 
     let mut location = Point2D { x: 0_i32, y: 0_i32 };
 
     for instruction in input.lines() {
-        let (direction, remaining) = instruction.split_once(' ').unwrap();
+        let (_, remaining) = instruction.split_once(' ').unwrap();
         let (length, remaining) = remaining
             .split_once(' ')
             .map(|x| (x.0.parse::<i32>().unwrap(), x.1))
@@ -128,55 +130,91 @@ pub fn part2(input: &str) -> Solution {
         let hex = remaining
             .trim_matches(|x| x == '(' || x == ')' || x == '#')
             .to_string();
+        let direction = hex.chars().last().unwrap();
+        let new_number = u32::from_str_radix(&hex[..hex.len() - 1], 16).unwrap();
 
-        for i in 1..=length {
+        for i in 0..new_number {
             let point = match direction {
-                "D" => location.down(),
-                "L" => location.left(),
-                "U" => location.up(),
-                "R" => location.rigth(),
+                '0' => location.rigth(),
+                '1' => location.down(),
+                '2' => location.left(),
+                '3' => location.up(),
                 _ => panic!("Could not find direction from {}", direction),
             };
-            let new_cube = Cube {
-                location: point.clone(),
-                hex: hex.clone(),
-            };
-            lagoon_grid.push(new_cube);
+            lagoon_grid.push(point.clone());
             location = point;
         }
     }
 
-    let grid_width_zero_indexed = lagoon_grid.iter().map(|x| x.location.x).max().unwrap();
-    let grid_x_start = lagoon_grid.iter().map(|x| x.location.x).min().unwrap();
-    let grid_height_zero_indexed = lagoon_grid.iter().map(|x| x.location.y).max().unwrap();
-    let grid_y_start = lagoon_grid.iter().map(|x| x.location.y).min().unwrap();
+    // for instruction in input.lines() {
+    //     let (direction, remaining) = instruction.split_once(' ').unwrap();
+    //     let (length, remaining) = remaining
+    //         .split_once(' ')
+    //         .map(|x| (x.0.parse::<i32>().unwrap(), x.1))
+    //         .unwrap();
+    //     let hex = remaining
+    //         .trim_matches(|x| x == '(' || x == ')' || x == '#')
+    //         .to_string();
+
+    //     for i in 1..=length {
+    //         let point = match direction {
+    //             "D" => location.down(),
+    //             "L" => location.left(),
+    //             "U" => location.up(),
+    //             "R" => location.rigth(),
+    //             _ => panic!("Could not find direction from {}", direction),
+    //         };
+    //         lagoon_grid.push(point.clone());
+    //         location = point;
+    //     }
+    // }
+
+    let grid_width_zero_indexed = lagoon_grid.iter().map(|x| x.x).max().unwrap();
+    let grid_x_start = lagoon_grid.iter().map(|x| x.x).min().unwrap();
+    let grid_height_zero_indexed = lagoon_grid.iter().map(|x| x.y).max().unwrap();
+    let grid_y_start = lagoon_grid.iter().map(|x| x.y).min().unwrap();
 
     let start_point: Point2D<i32> = Point2D { x: 1, y: 1 };
 
-    let inside = bfs_reach(start_point, |x| find_next_inside(x, &lagoon_grid));
-    let test = inside.collect::<Vec<Point2D<i32>>>();
-    dbg!(&test);
-
-    for y_iter in grid_y_start - 1..=grid_height_zero_indexed + 1 {
-        for x_iter in grid_x_start - 1..=grid_width_zero_indexed + 1 {
-            if let Some(digged) = lagoon_grid
-                .iter()
-                .find(|x| x.location.x == x_iter && x.location.y == y_iter)
-            {
-                print!("#")
-            } else {
-                if let Some(inside_point) = test.iter().find(|x| x.x == x_iter && x.y == y_iter) {
-                    print!("I")
-                } else {
-                    print!(".")
-                }
-            }
-        }
-        println!()
+    let mut test_vec: Vec<Coord> = Vec::new();
+    for point in lagoon_grid.iter() {
+        test_vec.push(Coord {
+            x: point.x as f64,
+            y: point.y as f64,
+        });
     }
+    let linestring = LineString::new(test_vec);
 
-    let result = test.len() + lagoon_grid.len();
+    let polygon = Polygon::new(linestring, vec![]);
 
+    let area = polygon.unsigned_area();
+    // dbg!(area, lagoon_grid.len());
+
+    // let mut sums: Vec<u128> = Vec::new();
+    // for y_outer in grid_y_start..=grid_height_zero_indexed {
+    //     let mut current_line_points = lagoon_grid
+    //         .iter()
+    //         .filter(|x| x.location.y == y_outer)
+    //         .map(|x| &x.location)
+    //         .collect::<Vec<&Point2D<i32>>>();
+
+    //     current_line_points.sort_unstable_by(|a, b| a.x.cmp(&b.x));
+
+    //     let mut is_inside = true;
+    //     let mut sum = 0_u128;
+
+    //     for (window_a, window_b) in current_line_points.iter().tuple_windows() {
+    //         if window_a.x - window_b.x != 1 {
+    //             if is_inside {
+    //                 sum += ((window_b.x - window_a.x) - 1) as u128;
+    //             }
+    //             is_inside = !is_inside;
+    //         }
+    //     }
+    //     sums.push(sum);
+    // }
+
+    let result = area as usize + ((lagoon_grid.len() + 2) / 2);
     Solution::from(result)
 }
 
