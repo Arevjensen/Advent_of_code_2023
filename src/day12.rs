@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use itertools::cloned;
-use nom::FindSubstring;
+
+
 use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::helpers::loader;
@@ -71,7 +71,7 @@ fn recursive_configurations(condition_record: &&str, number_groups: &[usize]) ->
     //This string can be worked on for this group
 
     if let Some(chars_needed_for_sequence) = usable_string.get(..number_groups[0]) {
-        if !chars_needed_for_sequence.contains(".") {
+        if !chars_needed_for_sequence.contains('.') {
             //hvis det er slutten eller det er ?/. etter sequence
             if check_is_potential_ok_point(usable_string, number_groups[0]) {
                 //The sequence is all
@@ -85,7 +85,7 @@ fn recursive_configurations(condition_record: &&str, number_groups: &[usize]) ->
         }
     }
     //Needs to count # as one block, cant do multiple with the same one as they are contigues
-    if usable_string.starts_with("#") {
+    if usable_string.starts_with('#') {
         // let skip_current_until_non_square = usable_string[..].trim_start_matches(|x| x == '#');
 
         // number_of_configurations +=
@@ -94,7 +94,7 @@ fn recursive_configurations(condition_record: &&str, number_groups: &[usize]) ->
         number_of_configurations += recursive_configurations(&&usable_string[1..], number_groups);
     }
 
-    return number_of_configurations;
+    number_of_configurations
 }
 
 fn remaining_are_all_ok(s: &str) -> bool {
@@ -132,7 +132,7 @@ pub fn part2(input: &str) -> Solution {
             let mut duplicated_numbrs = Vec::new();
             for _ in 0..5 {
                 for number in numbers.iter() {
-                    duplicated_numbrs.push(number.clone());
+                    duplicated_numbrs.push(*number);
                 }
             }
 
@@ -189,7 +189,7 @@ fn recursive_with_cache(
     let mut number_of_configurations = 0;
     //This string can be worked on for this group
     if let Some(chars_needed_for_sequence) = usable_string.get(..number_groups[0]) {
-        if !chars_needed_for_sequence.contains(".") {
+        if !chars_needed_for_sequence.contains('.') {
             //hvis det er slutten eller det er ?/. etter sequence
             if check_is_potential_ok_point(usable_string, number_groups[0]) {
                 //The sequence is all
@@ -217,7 +217,7 @@ fn recursive_with_cache(
         }
     }
     //Needs to count # as one block, cant do multiple with the same one as they are contigues
-    if usable_string.starts_with("#") {
+    if usable_string.starts_with('#') {
         // let skip_current_until_non_square = usable_string[..].trim_start_matches(|x| x == '#');
 
         // number_of_configurations +=
@@ -248,7 +248,7 @@ fn recursive_with_cache(
         number_of_configurations,
     );
 
-    return (number_of_configurations, my_map.clone());
+    (number_of_configurations, my_map.clone())
 }
 
 fn recursive_configurations_2(condition_record: &&str, number_groups: &[usize]) -> usize {
@@ -279,7 +279,7 @@ fn recursive_configurations_2(condition_record: &&str, number_groups: &[usize]) 
     //This string can be worked on for this group
 
     if let Some(chars_needed_for_sequence) = usable_string.get(..number_groups[0]) {
-        if !chars_needed_for_sequence.contains(".") {
+        if !chars_needed_for_sequence.contains('.') {
             //hvis det er slutten eller det er ?/. etter sequence
             if check_is_potential_ok_point(usable_string, number_groups[0]) {
                 //The sequence is all
@@ -294,7 +294,7 @@ fn recursive_configurations_2(condition_record: &&str, number_groups: &[usize]) 
         }
     }
     //Needs to count # as one block, cant do multiple with the same one as they are contigues
-    if usable_string.starts_with("#") {
+    if usable_string.starts_with('#') {
         // let skip_current_until_non_square = usable_string[..].trim_start_matches(|x| x == '#');
 
         // number_of_configurations +=
@@ -303,7 +303,7 @@ fn recursive_configurations_2(condition_record: &&str, number_groups: &[usize]) 
         number_of_configurations += recursive_configurations_2(&&usable_string[1..], number_groups);
     }
 
-    return number_of_configurations;
+    number_of_configurations
 }
 
 #[cfg(test)]

@@ -19,7 +19,7 @@ pub fn run(part: &str) {
 pub fn part1(input: &str) -> Solution {
     let grid_width = input.split_once('\n').unwrap().0.len();
     let grid_height = input.lines().count();
-    let input = input.replace("\n", "");
+    let input = input.replace('\n', "");
 
     let grid = Grid {
         height: grid_height,
@@ -120,7 +120,7 @@ fn successors(
     diretion: (Direction, usize),
     grid: &Grid,
 ) -> Vec<((Point2D<usize>, (Direction, usize)), usize)> {
-    let next_locations = next_locations(&point, &diretion, grid)
+    let next_locations = next_locations(point, &diretion, grid)
         .iter()
         .filter(|x| x.0.is_some())
         .map(|x| (x.clone().0.unwrap(), x.clone().1))
@@ -222,7 +222,7 @@ enum Direction {
 pub fn part2(input: &str) -> Solution {
     let grid_width = input.split_once('\n').unwrap().0.len();
     let grid_height = input.lines().count();
-    let input = input.replace("\n", "");
+    let input = input.replace('\n', "");
 
     let grid = Grid {
         height: grid_height,
@@ -315,7 +315,7 @@ fn successors_2(
     diretion: (Direction, usize),
     grid: &Grid,
 ) -> Vec<((Point2D<usize>, (Direction, usize)), usize)> {
-    let next_locations = next_locations_2(&point, &diretion, grid)
+    let next_locations = next_locations_2(point, &diretion, grid)
         .iter()
         .filter(|x| x.0.is_some())
         .map(|x| (x.clone().0.unwrap(), x.clone().1))

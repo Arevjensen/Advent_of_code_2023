@@ -232,7 +232,7 @@ struct Position {
 pub fn part1(input: &str) -> Solution {
     let grid_heigth = input.lines().count();
     let grid_width = input.chars().take_while(|x| *x != '\n').count();
-    let input_stripped = input.replace("\n", "");
+    let input_stripped = input.replace('\n', "");
 
     let griddy = Grid {
         height: grid_heigth,
@@ -251,7 +251,7 @@ pub fn part1(input: &str) -> Solution {
 
     let mut upcoming_positions = vec![start.clone()];
 
-    while upcoming_positions.len() != 0 {
+    while !upcoming_positions.is_empty() {
         let current_positions = upcoming_positions.clone();
         upcoming_positions.clear();
         for position in current_positions {
@@ -298,7 +298,7 @@ pub fn part1(input: &str) -> Solution {
 pub fn part2(input: &str) -> Solution {
     let grid_heigth = input.lines().count();
     let grid_width = input.chars().take_while(|x| *x != '\n').count();
-    let input_stripped = input.replace("\n", "");
+    let input_stripped = input.replace('\n', "");
 
     let griddy = Grid {
         height: grid_heigth,
@@ -353,7 +353,7 @@ pub fn part2(input: &str) -> Solution {
 
         let mut upcoming_positions = vec![start_position.clone()];
 
-        while upcoming_positions.len() != 0 {
+        while !upcoming_positions.is_empty() {
             let current_positions = upcoming_positions.clone();
             upcoming_positions.clear();
             for position in current_positions {

@@ -1,6 +1,4 @@
-use std::clone;
-
-use num_traits::{AsPrimitive, PrimInt, ToPrimitive};
+use num_traits::{PrimInt, ToPrimitive};
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Point2D<T> {
@@ -117,13 +115,15 @@ pub struct Point3D<T> {
 }
 
 mod test {
-    use crate::helpers::structs::Point2D;
+
     use rstest::rstest;
 
     #[rstest]
     #[case(1, 1, 11)]
     #[case(5, 2, 25)]
     fn idx_inside_bounds_returns_some(#[case] x: i32, #[case] y: i32, #[case] result: usize) {
+        use crate::helpers::structs::Point2D;
+
         let test_point = Point2D { x: x, y: y };
         let (upper_x, upper_y) = (10, 10);
 
@@ -139,6 +139,8 @@ mod test {
         #[case] y: i32,
         #[case] result: Option<usize>,
     ) {
+        use crate::helpers::structs::Point2D;
+
         let test_point = Point2D { x: x, y: y };
         let (upper_x, upper_y) = (10, 10);
 

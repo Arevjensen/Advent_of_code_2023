@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;
@@ -116,7 +116,7 @@ pub fn part2(input: &str) -> Solution {
 }
 
 fn do_loop(input: &Vec<String>) -> Vec<String> {
-    let one_north = move_grid_north(&input);
+    let one_north = move_grid_north(input);
     let one_west = move_grid_west(&one_north);
     let one_south = move_grid_south(&one_west);
     move_grid_east(&one_south)
