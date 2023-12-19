@@ -269,9 +269,11 @@ fn recursive_part_checker(
 ) -> usize {
     match current_rule_name.as_str() {
         "A" => {
+            dbg!(&part_range);
             return part_range.find_permutations();
         }
         "R" => {
+            dbg!(&part_range);
             return 0;
         }
         _ => {}
@@ -284,8 +286,14 @@ fn recursive_part_checker(
     for sub_rule in rule {
         match sub_rule {
             SubRule::Next(next) => match next.as_str() {
-                "A" => result += remaining.find_permutations(),
-                "R" => result += 0,
+                "A" => {
+                    dbg!(&remaining);
+                    result += remaining.find_permutations()
+                }
+                "R" => {
+                    dbg!(&remaining);
+                    result += 0
+                }
                 _ => result += recursive_part_checker(remaining.clone(), next, rule_map),
             },
             SubRule::SubRule(check_var, less_or_greater, value, next) => match check_var {
@@ -424,7 +432,7 @@ fn recursive_part_checker(
                             remaining = PartRange {
                                 x: remaining.x,
                                 m: remaining.m,
-                                a: (remaining.a.0, *value - 1),
+                                a: (remaining.a.0, *value),
                                 s: remaining.s,
                             };
                         }
@@ -464,7 +472,7 @@ fn recursive_part_checker(
                                 x: remaining.x,
                                 m: remaining.m,
                                 a: remaining.a,
-                                s: (*value + 1, remaining.a.1),
+                                s: (*value + 1, remaining.s.1),
                             };
                             result += recursive_part_checker(new_range, next, rule_map);
 
@@ -472,7 +480,7 @@ fn recursive_part_checker(
                                 x: remaining.x,
                                 m: remaining.m,
                                 a: remaining.a,
-                                s: (remaining.a.0, *value - 1),
+                                s: (remaining.s.0, *value),
                             };
                         }
                     }
