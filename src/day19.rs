@@ -1,7 +1,4 @@
 use std::collections::HashMap;
-use std::env::current_exe;
-
-use clap::builder::ValueParserFactory;
 
 use crate::helpers::loader;
 use crate::helpers::solution::Solution;

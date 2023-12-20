@@ -14,6 +14,11 @@ pub fn run(part: &str) {
 }
 
 pub fn part1(input: &str) -> Solution {
+    //struct for each module
+    //different send and recieve functions? make trait?
+    //Keep vec of incoming signals? or outgoing?, read instructions properly
+    //Make module 1 send, then 2, then 3,
+    // then handle recived pulses
     Solution::from(100)
 }
 
@@ -23,15 +28,28 @@ pub fn part2(input: &str) -> Solution {
 
 #[cfg(test)]
 mod tests {
+    use rstest::rstest;
+
     use super::*;
 
-    const TEST_INPUT_ONE: &str = r"";
-    const TEST_INPUT_TWO: &str = r"";
+    const TEST_INPUT_ONE: &str = r"broadcaster -> a, b, c
+%a -> b
+%b -> c
+%c -> inv
+&inv -> a";
 
-    #[test]
-    fn test_part_1() {
-        let fasit = Solution::from(100);
-        let part_solution = part1(TEST_INPUT_ONE);
+    const TEST_INPUT_TWO: &str = r"broadcaster -> a
+%a -> inv, con
+&inv -> b
+%b -> con
+&con -> output";
+
+    #[rstest]
+    #[case(TEST_INPUT_ONE, 32000000_usize)]
+    #[case(TEST_INPUT_TWO, 11687500_usize)]
+    fn test_part_1(#[case] input: &str, #[case] result: usize) {
+        let fasit = Solution::from(result);
+        let part_solution = part1(input);
         assert_eq!(fasit, part_solution);
     }
 
