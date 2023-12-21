@@ -306,7 +306,7 @@ pub fn part2(input: &str) -> Solution {
     let button_pushes = 1000;
     let mut high_pulses = 0;
     let mut low_pulses = 0;
-    'outer: for button_presses in 0.. {
+    'outer: for button_presses in 1.. {
         low_pulses += 1;
         let mut inbox = VecDeque::<(String, String, Signal)>::from([(
             String::from("button"),
